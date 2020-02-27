@@ -88,30 +88,29 @@ void slideForward() {
 	while (1) {
 		while (((GetKeyState(0x57) & 0x100) != 0) && ((GetKeyState(VK_SHIFT) & 0x100) == 0) && enabled) {
 			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 			SendInput(1, &C_keyDown, sizeof(INPUT));
 			Sleep(350);
 			SendInput(1, &C_keyUp, sizeof(INPUT));
 			Sleep(50);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
 			Sleep(200);
 			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
 			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
-
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
+			Sleep(200);
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 			Sleep(50);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
+			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) != 0) { break; }
 		}
 		Sleep(1);
 	}
