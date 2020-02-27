@@ -86,7 +86,9 @@ void slideForward() {
 	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
 	while (1) {
-		while (((GetKeyState(0x57) & 0x100) != 0) && enabled) {
+		while (((GetKeyState(0x57) & 0x100) != 0) && ((GetKeyState(VK_SHIFT) & 0x100) == 0) && enabled) {
+			Sleep(200);
+			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
 			Sleep(200);
 			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
 			Sleep(200);
@@ -107,9 +109,8 @@ void slideForward() {
 			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
 			Sleep(200);
 			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
-			Sleep(200);
+
+			Sleep(50);
 			if ((GetKeyState(0x57) & 0x100) == 0) { break; }
 		}
 		Sleep(1);
