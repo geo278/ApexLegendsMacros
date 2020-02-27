@@ -25,7 +25,7 @@ void slideBack() {
 	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
 	while (1) {
-		while (((GetKeyState(0x53) & 0x100) != 0) && enabled) {
+		while ((GetKeyState(0x53) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0 && enabled) {
 			Sleep(150);
 			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
 			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
