@@ -6,6 +6,38 @@
 using namespace std;
 
 bool enabled = true;
+int xSize = GetSystemMetrics(SM_CXSCREEN);
+int ySize = GetSystemMetrics(SM_CYSCREEN);
+
+void reticule() {
+	HDC dc = GetDC(HWND_DESKTOP);
+	BITMAPINFOHEADER bmi = { 0 };
+	bmi.biSize = sizeof(BITMAPINFOHEADER);
+	bmi.biPlanes = 1;
+	bmi.biBitCount = 32;
+	bmi.biWidth = 2;
+	bmi.biHeight = -2;
+	bmi.biCompression = BI_RGB;
+	bmi.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	RGBQUAD centerColour;
+	centerColour.rgbRed = 0;
+	centerColour.rgbBlue = 0;
+	centerColour.rgbGreen = 255;
+	RGBQUAD pixels[4] = { centerColour, centerColour, centerColour, centerColour };
+	RGBQUAD* p;
+	p = pixels;
+	while (true) {
+		while (true) {
+
+			SetDIBitsToDevice(dc, xSize / 2 - 1, ySize / 2 - 1, 2, 2, 0, 0, 0, 2, p, (BITMAPINFO*)&bmi, DIB_RGB_COLORS);
+			SetDIBitsToDevice(dc, xSize / 2 - 1, ySize / 2 + 1, 2, 2, 0, 0, 0, 2, p, (BITMAPINFO*)&bmi, DIB_RGB_COLORS);
+
+			Sleep(4);
+			if (!enabled) { break; }
+		}
+		Sleep(4);
+	}
+}
 
 void slideBack() {
 	INPUT VK_CONTROL_keyDown;
@@ -25,14 +57,29 @@ void slideBack() {
 	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
 	while (1) {
-		while ((GetKeyState(0x53) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0 && enabled) {
+		while ((GetKeyState(0x53) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && enabled) {
 			Sleep(150);
 			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
+
 			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(200);
+			Sleep(68);
 			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+			Sleep(68);
+
+			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+			Sleep(68);
+			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+			Sleep(68);
+
+			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+			Sleep(68);
+			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+			Sleep(68);
+
+
+
 			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
-			Sleep(200);
+
 			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
 			SendInput(1, &VK_CONTROL_keyDown, sizeof(INPUT));
 			Sleep(200);
@@ -61,8 +108,13 @@ void slideBack() {
 				break;
 			}
 			Sleep(100);
+			if ((GetKeyState(0x53) & 0x100) == 0) {
+				SendInput(1, &VK_CONTROL_keyUp, sizeof(INPUT));
+				break;
+			}
+			Sleep(200);
 			SendInput(1, &VK_CONTROL_keyUp, sizeof(INPUT));
-			Sleep(400);
+			Sleep(200);
 		}
 		Sleep(1);
 	}
@@ -139,6 +191,8 @@ int main() {
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackEnabled, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideBack, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideForward, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0);
+
 
 
 	while (1) {
