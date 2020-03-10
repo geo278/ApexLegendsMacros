@@ -10,7 +10,7 @@ bool enabled = true;
 int xSize = GetSystemMetrics(SM_CXSCREEN);
 int ySize = GetSystemMetrics(SM_CYSCREEN);
 
-float zoom = 2;
+float zoom = 1.2;
 
 BOOL SetZoomB(float magFactor) {
 	if (magFactor < 1.0) {
@@ -54,32 +54,47 @@ void trackZoom() {
 }
 
 void reticule() {
-	const int reticuleWidth = 2;
-	const int reticuleHeight = 200;
-	HDC dc = GetDC(HWND_DESKTOP);
-	BITMAPINFOHEADER bmi = { 0 };
-	bmi.biSize = sizeof(BITMAPINFOHEADER);
-	bmi.biPlanes = 1;
-	bmi.biBitCount = 32;
-	bmi.biWidth = reticuleWidth ;
-	bmi.biHeight = -reticuleHeight;
-	bmi.biCompression = BI_RGB;
-	bmi.biSizeImage = 0; // 3 * ScreenX * ScreenY
 	RGBQUAD centerColour;
 	centerColour.rgbRed = 0;
 	centerColour.rgbBlue = 0;
 	centerColour.rgbGreen = 255;
-	RGBQUAD pixels[reticuleWidth * reticuleHeight];
-	for (int i = 0; i < reticuleWidth * reticuleHeight; i++) {
-		pixels[i] = centerColour;
+
+	const int verticalWidth = 2;
+	const int verticalHeight = 200;
+	HDC dcV = GetDC(HWND_DESKTOP);
+	BITMAPINFOHEADER bmiV = { 0 };
+	bmiV.biSize = sizeof(BITMAPINFOHEADER);
+	bmiV.biPlanes = 1;
+	bmiV.biBitCount = 32;
+	bmiV.biWidth = verticalWidth;
+	bmiV.biHeight = -verticalHeight;
+	bmiV.biCompression = BI_RGB;
+	bmiV.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	RGBQUAD verticalPixels[verticalWidth * verticalHeight];
+	for (int i = 0; i < verticalWidth * verticalHeight; i++) {
+		verticalPixels[i] = centerColour;
 	}
-	RGBQUAD* p;
-	p = pixels;
+
+	const int horizontalWidth = 400;
+	const int horizontalHeight = 1;
+	HDC dcH = GetDC(HWND_DESKTOP);
+	BITMAPINFOHEADER bmiH = { 0 };
+	bmiH.biSize = sizeof(BITMAPINFOHEADER);
+	bmiH.biPlanes = 1;
+	bmiH.biBitCount = 32;
+	bmiH.biWidth = horizontalWidth;
+	bmiH.biHeight = -horizontalHeight;
+	bmiH.biCompression = BI_RGB;
+	bmiH.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	RGBQUAD horizontalPixels[horizontalWidth * horizontalHeight];
+	for (int i = 0; i < horizontalWidth * horizontalHeight; i++) {
+		horizontalPixels[i] = centerColour;
+	}
+
 	while (true) {
-		while (true) {
-			SetDIBitsToDevice(dc, xSize / 2 - 1, ySize / 2 - 1, reticuleWidth, reticuleHeight, 0, 0, 0, reticuleHeight, p, (BITMAPINFO*)&bmi, DIB_RGB_COLORS);
-			Sleep(4);
-			if (!enabled) { break; }
+		if (enabled) {
+			SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - 1, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			SetDIBitsToDevice(dcH, xSize / 2 - 1 - 200, ySize / 2 - 1, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
 		}
 		Sleep(3);
 	}
@@ -218,15 +233,50 @@ void slideForward() {
 
 void passiveRecoilCompensation() {
 	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0) {
+		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0 && enabled) {
 			mouse_event(MOUSEEVENTF_MOVE, 0, 1, 0, 0);
 			Sleep(20);
 		}
 		Sleep(5);
 	}
 }
+void passiveStrafeCompensation() {
+	while (true) {
+		if ((GetKeyState(0x44) & 0x100) != 0 && enabled) { // D causes leftward mouse movement
+			mouse_event(MOUSEEVENTF_MOVE, -1, 0, 0, 0);
+		}
+		if ((GetKeyState(0x41) & 0x100) != 0 && enabled) { // A causes rightward mouse movement
+			mouse_event(MOUSEEVENTF_MOVE, 1, 0, 0, 0);
+		}
+		Sleep(14);
+	}
+}
 
 void autoClick() {
+	INPUT VK_MENU_keyDown;
+	VK_MENU_keyDown.type = INPUT_KEYBOARD;
+	VK_MENU_keyDown.ki.wScan = MapVirtualKey(VK_MENU, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_MENU_keyDown.ki.time = 0;
+	VK_MENU_keyDown.ki.wVk = VK_MENU; // virtual-key code
+	VK_MENU_keyDown.ki.dwExtraInfo = 0;
+	VK_MENU_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT VK_MENU_keyUp = VK_MENU_keyDown;
+	VK_MENU_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+
+	while (true) {		
+		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
+			// mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+			SendInput(1, &VK_MENU_keyDown, sizeof(INPUT));
+			Sleep(10);
+			// mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0); // Left click
+			SendInput(1, &VK_MENU_keyUp, sizeof(INPUT));
+			Sleep(5);
+		}
+		Sleep(5);
+	}
+}
+
+void autoSwapWeapon() {
 	INPUT VK_NUMPAD0_keyDown;
 	VK_NUMPAD0_keyDown.type = INPUT_KEYBOARD;
 	VK_NUMPAD0_keyDown.ki.wScan = MapVirtualKey(VK_NUMPAD0, MAPVK_VK_TO_VSC); // hardware scan code
@@ -238,13 +288,13 @@ void autoClick() {
 	VK_NUMPAD0_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
 	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0) {
-			// mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
+			while ((GetKeyState(VK_RBUTTON) & 0x100) != 0) {
+				Sleep(5);
+			}
 			SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
 			Sleep(10);
-			// mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0); // Left click
 			SendInput(1, &VK_NUMPAD0_keyUp, sizeof(INPUT));
-			Sleep(10);
 		}
 		Sleep(5);
 	}
@@ -252,31 +302,36 @@ void autoClick() {
 
 void trackEnabled() {
 	while (1) {
-		if ((GetKeyState(VK_F1) & 0x100) != 0) {
+		if ((GetKeyState(VK_F2) & 0x100) != 0) {
 			enabled = !enabled;
-			cout << "F1" << endl;
+			enabled ? cout << "enabled" << endl : cout << "disabled" << endl;
 			Sleep(500);
 		}
 		Sleep(5);
 	}
 }
 
-void Input() {
+void zoomInput() {
 	while (1) {
-		cout << "Enter int to change value";
-		cin >> enabled;
-		Sleep(1000);
+		cout << "Enter number to change zoom value ( current value: " << zoom << " )" << endl;
+		cin >> zoom;
+		Sleep(500);
 	}
 }
 
 int main() {
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackEnabled, 0, 0, 0);
+
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideBack, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideForward, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveRecoilCompensation, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveStrafeCompensation, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)autoClick, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)autoSwapWeapon, 0, 0, 0);
 
+
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0); 
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)zoomInput, 0, 0, 0);
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
 
 	while (1) {
