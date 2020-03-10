@@ -289,7 +289,7 @@ void autoSwapWeapon() {
 
 	while (true) {
 		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
-			while ((GetKeyState(VK_RBUTTON) & 0x100) != 0) {
+			while ((GetKeyState(VK_LBUTTON) & 0x100) != 0 || (GetKeyState(VK_RBUTTON) & 0x100) != 0) {
 				Sleep(5);
 			}
 			SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
