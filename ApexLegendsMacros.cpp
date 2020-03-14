@@ -255,7 +255,30 @@ void passiveStrafeCompensation() {
 		if ((GetKeyState(0x41) & 0x100) != 0 && enabled) { // A causes rightward mouse movement
 			mouse_event(MOUSEEVENTF_MOVE, 1, 0, 0, 0);
 		}
-		Sleep(15);
+		Sleep(16);
+	}
+}
+
+void autoClick() {
+	INPUT VK_NUMPAD1_keyDown;
+	VK_NUMPAD1_keyDown.type = INPUT_KEYBOARD;
+	VK_NUMPAD1_keyDown.ki.wScan = MapVirtualKey(VK_NUMPAD1, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_NUMPAD1_keyDown.ki.time = 0;
+	VK_NUMPAD1_keyDown.ki.wVk = VK_NUMPAD1; // virtual-key code
+	VK_NUMPAD1_keyDown.ki.dwExtraInfo = 0;
+	VK_NUMPAD1_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT  VK_NUMPAD1_keyUp = VK_NUMPAD1_keyDown;
+	VK_NUMPAD1_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+
+	while (true) {		
+		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
+			// mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
+			SendInput(1, &VK_NUMPAD1_keyDown, sizeof(INPUT));
+			Sleep(210);
+			// mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0); // Left click
+			SendInput(1, &VK_NUMPAD1_keyUp, sizeof(INPUT));
+		}
+		Sleep(10);
 	}
 }
 
@@ -271,37 +294,22 @@ void autoSwapWeapon() {
 	VK_NUMPAD0_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
 	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
-			while ((GetKeyState(VK_LBUTTON) & 0x100) != 0 || (GetKeyState(VK_RBUTTON) & 0x100) != 0) {
-				Sleep(10);
-			}
+		if ((GetKeyState(VK_CONTROL) & 0x100) != 0 && enabled) {
+			//for (int i = 0; i < 35; i++) {
+			//	Sleep(10);
+			//	if ((GetKeyState(0x57) & 0x100) != 0) {
+			//		Sleep(15);
+			//		SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
+			//		Sleep(10);
+			//		SendInput(1, &VK_NUMPAD0_keyUp, sizeof(INPUT));
+			//		Sleep(3000);
+			//		break;
+			//	}
+			//}
 			SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
 			Sleep(10);
 			SendInput(1, &VK_NUMPAD0_keyUp, sizeof(INPUT));
-			Sleep(4000);
-		}
-		Sleep(5);
-	}
-}
-
-void autoClick() {
-	INPUT VK_NUMPAD1_keyDown;
-	VK_NUMPAD1_keyDown.type = INPUT_KEYBOARD;
-	VK_NUMPAD1_keyDown.ki.wScan = MapVirtualKey(VK_NUMPAD1, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_NUMPAD1_keyDown.ki.time = 0;
-	VK_NUMPAD1_keyDown.ki.wVk = VK_NUMPAD1; // virtual-key code
-	VK_NUMPAD1_keyDown.ki.dwExtraInfo = 0;
-	VK_NUMPAD1_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT  VK_NUMPAD1_keyUp = VK_NUMPAD1_keyDown;
-	VK_NUMPAD1_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-
-	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
-			// mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-			SendInput(1, &VK_NUMPAD1_keyDown, sizeof(INPUT));
-			Sleep(5);
-			// mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0); // Left click
-			SendInput(1, &VK_NUMPAD1_keyUp, sizeof(INPUT));
+			Sleep(2000);
 		}
 		Sleep(5);
 	}
@@ -336,12 +344,12 @@ int main() {
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveStrafeCompensation, 0, 0, 0);
 
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)autoClick, 0, 0, 0);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)autoSwapWeapon, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)autoSwapWeapon, 0, 0, 0);
 
 
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0); 
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)zoomInput, 0, 0, 0);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
 
 	while (1) {
 		Sleep(1000);
