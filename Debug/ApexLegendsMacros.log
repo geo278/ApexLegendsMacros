@@ -1,1 +1,3 @@
-﻿  ApexLegendsMacros.vcxproj -> C:\Users\georg\Documents\GitHub\ApexLegendsMacros\Debug\ApexLegendsMacros.exe
+﻿  ApexLegendsMacros.cpp
+C:\Users\georg\Documents\GitHub\ApexLegendsMacros\ApexLegendsMacros.cpp(13,17): warning C4305: 'initializing': truncation from 'double' to 'float'
+  ApexLegendsMacros.vcxproj -> C:\Users\georg\Documents\GitHub\ApexLegendsMacros\Debug\ApexLegendsMacros.exe

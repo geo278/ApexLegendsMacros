@@ -10,7 +10,7 @@ bool enabled = true;
 int xSize = GetSystemMetrics(SM_CXSCREEN);
 int ySize = GetSystemMetrics(SM_CYSCREEN);
 
-float zoom = (float)1.2;
+float zoom = 1.2;
 
 BOOL SetZoomB(float magFactor) {
 	if (magFactor < 1.0) {
@@ -267,11 +267,12 @@ void autoClick() {
 		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
 			// mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
 			SendInput(1, &VK_MENU_keyDown, sizeof(INPUT));
-			Sleep(3);
+			Sleep(10);
 			// mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0); // Left click
 			SendInput(1, &VK_MENU_keyUp, sizeof(INPUT));
+			Sleep(5);
 		}
-		Sleep(3);
+		Sleep(5);
 	}
 }
 
