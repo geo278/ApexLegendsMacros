@@ -7,6 +7,7 @@
 using namespace std;
 
 bool enabled = true;
+//bool g7ScoutMode = false;
 int xSize = GetSystemMetrics(SM_CXSCREEN);
 int ySize = GetSystemMetrics(SM_CYSCREEN);
 
@@ -124,76 +125,92 @@ void reticule() {
 			//SetDIBitsToDevice(dcH, xSize / 2 + 9, ySize / 2 - 1, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
 
 			// Dot:
+			//SetDIBitsToDevice(dcD, xSize / 2 - 1, ySize / 2 - 41, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
 			SetDIBitsToDevice(dcD, xSize / 2 - 1, ySize / 2 - 1, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
 
-			SetDIBitsToDevice(dcD, xSize / 2 - 3, ySize / 2 - 1, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcD, xSize / 2 + 1, ySize / 2 - 1, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcD, xSize / 2 - 1, ySize / 2 - 3, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcD, xSize / 2 - 1, ySize / 2 + 1, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcD, xSize / 2 - 3, ySize / 2 - 41, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcD, xSize / 2 + 1, ySize / 2 - 41, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcD, xSize / 2 - 1, ySize / 2 - 43, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcD, xSize / 2 - 1, ySize / 2 - 39, dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
 		}
 		Sleep(3);
 	}
 }
+void flickClick() {
+	INPUT VK_OEM_PLUS_keyDown;
+	VK_OEM_PLUS_keyDown.type = INPUT_KEYBOARD;
+	VK_OEM_PLUS_keyDown.ki.wScan = MapVirtualKey(VK_OEM_PLUS, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_OEM_PLUS_keyDown.ki.time = 0;
+	VK_OEM_PLUS_keyDown.ki.wVk = VK_OEM_PLUS; // virtual-key code
+	VK_OEM_PLUS_keyDown.ki.dwExtraInfo = 0;
+	VK_OEM_PLUS_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT  VK_OEM_PLUS_keyUp = VK_OEM_PLUS_keyDown;
+	VK_OEM_PLUS_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
-void slideBack() {
-	INPUT C_keyDown;
-	C_keyDown.type = INPUT_KEYBOARD;
-	C_keyDown.ki.wScan = MapVirtualKey(0x43, MAPVK_VK_TO_VSC); // hardware scan code
-	C_keyDown.ki.time = 0;
-	C_keyDown.ki.wVk = 0x43; // virtual-key code
-	C_keyDown.ki.dwExtraInfo = 0;
-	C_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT C_keyUp = C_keyDown;
-	C_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-
-	INPUT VK_SPACE_keyDown = C_keyDown;
-	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
-	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
-	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+	double calFactor = 1;
 
 	while (true) {
-		while ((GetKeyState(0x53) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && enabled) {
-			Sleep(150);
-			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
+		//if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled && g7ScoutMode) {
+		//	mouse_event(MOUSEEVENTF_MOVE, 0, (int) (-205 * calFactor), 0, 0);
+		//	Sleep(5);
+		//	SendInput(1, &VK_OEM_PLUS_keyDown, sizeof(INPUT));
+		//	Sleep(10);
+		//	SendInput(1, &VK_OEM_PLUS_keyUp, sizeof(INPUT));
+		//	mouse_event(MOUSEEVENTF_MOVE, 0, (int)(250 * calFactor), 0, 0);
+		//	Sleep(240);
+		//}
 
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(68);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-			Sleep(68);
-
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(68);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-			Sleep(68);
-
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(68);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-			Sleep(68);
-
-			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
-			SendInput(1, &C_keyDown, sizeof(INPUT));
-			Sleep(200);
-			SendInput(1, &C_keyUp, sizeof(INPUT));
-
-			for (int i = 0; i < 6; i++) {
-				Sleep(200);
-				if ((GetKeyState(0x53) & 0x100) == 0) {
-					SendInput(1, &C_keyUp, sizeof(INPUT));
+		while ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
+			SendInput(1, &VK_OEM_PLUS_keyDown, sizeof(INPUT));
+			mouse_event(MOUSEEVENTF_MOVE, 0, (int)(5 * calFactor), 0, 0);
+			for (int i = 0; i < 49; i++) {
+				if ((GetKeyState(VK_LBUTTON) & 0x100) == 0) {
 					break;
 				}
+				Sleep(10);
 			}
-			SendInput(1, &C_keyDown, sizeof(INPUT));
-			Sleep(50);
-			SendInput(1, &C_keyUp, sizeof(INPUT));
-			Sleep(50);
+			SendInput(1, &VK_OEM_PLUS_keyUp, sizeof(INPUT));
+			Sleep(10);
 		}
-		Sleep(5);
+		
+		Sleep(1);
 	}
 }
 
-void slideForward() {
+void crouchStrafe() {
+	INPUT VK_CONTROL_keyDown;
+	VK_CONTROL_keyDown.type = INPUT_KEYBOARD;
+	VK_CONTROL_keyDown.ki.wScan = MapVirtualKey(VK_CONTROL, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_CONTROL_keyDown.ki.time = 0;
+	VK_CONTROL_keyDown.ki.wVk = VK_CONTROL; // virtual-key code
+	VK_CONTROL_keyDown.ki.dwExtraInfo = 0;
+	VK_CONTROL_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT VK_CONTROL_keyUp = VK_CONTROL_keyDown;
+	VK_CONTROL_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+
+	while (true) {
+		if ((GetKeyState(0x57) & 0x100) == 0 && enabled) { // while w not pressed
+			if ((GetKeyState(0x41) & 0x100) != 0) {
+				while ((GetKeyState(0x41) & 0x100) != 0) { // A
+					Sleep(10);
+				}
+				SendInput(1, &VK_CONTROL_keyDown, sizeof(INPUT));
+				Sleep(200);
+				SendInput(1, &VK_CONTROL_keyUp, sizeof(INPUT));
+			}
+			if ((GetKeyState(0x44) & 0x100) != 0) { // D
+				while ((GetKeyState(0x44) & 0x100) != 0) { // A
+					Sleep(10);
+				}
+				SendInput(1, &VK_CONTROL_keyDown, sizeof(INPUT));
+				Sleep(200);
+				SendInput(1, &VK_CONTROL_keyUp, sizeof(INPUT));
+			}
+		}
+	}
+}
+
+void maximizeSprint() {
 	INPUT C_keyDown;
 	C_keyDown.type = INPUT_KEYBOARD;
 	C_keyDown.ki.wScan = MapVirtualKey(0x43, MAPVK_VK_TO_VSC); // hardware scan code
@@ -243,50 +260,83 @@ void slideForward() {
 	}
 }
 
+//void slideBack() {
+//	INPUT C_keyDown;
+//	C_keyDown.type = INPUT_KEYBOARD;
+//	C_keyDown.ki.wScan = MapVirtualKey(0x43, MAPVK_VK_TO_VSC); // hardware scan code
+//	C_keyDown.ki.time = 0;
+//	C_keyDown.ki.wVk = 0x43; // virtual-key code
+//	C_keyDown.ki.dwExtraInfo = 0;
+//	C_keyDown.ki.dwFlags = 0; // 0 for key down
+//	INPUT C_keyUp = C_keyDown;
+//	C_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+//
+//	INPUT VK_SPACE_keyDown = C_keyDown;
+//	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
+//	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
+//	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
+//	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+//
+//	while (true) {
+//		while ((GetKeyState(0x53) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && enabled) {
+//			Sleep(150);
+//			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
+//
+//			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+//			Sleep(68);
+//			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+//Sleep(68);
+//
+//SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+//Sleep(68);
+//SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+//Sleep(68);
+//
+//SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+//Sleep(68);
+//SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+//Sleep(68);
+//
+//if ((GetKeyState(0x53) & 0x100) == 0) { break; }
+//SendInput(1, &C_keyDown, sizeof(INPUT));
+//Sleep(200);
+//SendInput(1, &C_keyUp, sizeof(INPUT));
+//
+//for (int i = 0; i < 6; i++) {
+//	Sleep(200);
+//	if ((GetKeyState(0x53) & 0x100) == 0) {
+//		SendInput(1, &C_keyUp, sizeof(INPUT));
+//		break;
+//	}
+//}
+//SendInput(1, &C_keyDown, sizeof(INPUT));
+//Sleep(50);
+//SendInput(1, &C_keyUp, sizeof(INPUT));
+//Sleep(50);
+//		}
+//		Sleep(5);
+//	}
+//}
 
-
-void autoClick() {
-	INPUT VK_OEM_PLUS_keyDown;
-	VK_OEM_PLUS_keyDown.type = INPUT_KEYBOARD;
-	VK_OEM_PLUS_keyDown.ki.wScan = MapVirtualKey(VK_OEM_PLUS, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_OEM_PLUS_keyDown.ki.time = 0;
-	VK_OEM_PLUS_keyDown.ki.wVk = VK_NUMPAD1; // virtual-key code
-	VK_OEM_PLUS_keyDown.ki.dwExtraInfo = 0;
-	VK_OEM_PLUS_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT  VK_OEM_PLUS_keyUp = VK_OEM_PLUS_keyDown;
-	VK_OEM_PLUS_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-
-	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
-			// mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0);
-			SendInput(1, &VK_OEM_PLUS_keyDown, sizeof(INPUT));
-			Sleep(250);
-			// mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0); // Left click
-			SendInput(1, &VK_OEM_PLUS_keyUp, sizeof(INPUT));
-			Sleep(150);
-		}
-		Sleep(5);
-	}
-}
-void passiveRecoilCompensation() {
-	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0 && enabled) {
-			mouse_event(MOUSEEVENTF_MOVE, 0, 2, 0, 0);
-		}
-		Sleep(5);
-	}
-}
-void passiveStrafeCompensation() {
-	while (true) {
-		if ((GetKeyState(0x44) & 0x100) != 0 && enabled) { // D causes leftward mouse movement
-			mouse_event(MOUSEEVENTF_MOVE, -1, 0, 0, 0);
-		}
-		if ((GetKeyState(0x41) & 0x100) != 0 && enabled) { // A causes rightward mouse movement
-			mouse_event(MOUSEEVENTF_MOVE, 1, 0, 0, 0);
-		}
-		Sleep(10);
-	}
-}
+//void passiveRecoilCompensation() {
+//	while (true) {
+//		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0 && enabled) {
+//			mouse_event(MOUSEEVENTF_MOVE, 0, 2, 0, 0);
+//		}
+//		Sleep(8);
+//	}
+//}
+//void passiveStrafeCompensation() {
+//	while (true) {
+//		if ((GetKeyState(0x44) & 0x100) != 0 && enabled) { // D causes leftward mouse movement
+//			mouse_event(MOUSEEVENTF_MOVE, -1, 0, 0, 0);
+//		}
+//		if ((GetKeyState(0x41) & 0x100) != 0 && enabled) { // A causes rightward mouse movement
+//			mouse_event(MOUSEEVENTF_MOVE, 1, 0, 0, 0);
+//		}
+//		Sleep(10);
+//	}
+//}
 
 //void passiveBHop() {
 //	INPUT VK_CONTROL_keyDown;
@@ -354,6 +404,11 @@ void trackEnabled() {
 			enabled ? cout << "enabled" << endl : cout << "disabled" << endl;
 			Sleep(500);
 		}
+		//if ((GetKeyState(VK_F3) & 0x100) != 0) {
+		//	g7ScoutMode = !g7ScoutMode;
+		//	g7ScoutMode ? cout << "g7ScoutMode" << endl : cout << "g7ScoutMode disabled" << endl;
+		//	Sleep(500);
+		//}
 		Sleep(5);
 	}
 }
@@ -361,16 +416,18 @@ void trackEnabled() {
 int main() {
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackEnabled, 0, 0, 0);
 
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideBack, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideForward, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveRecoilCompensation, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveStrafeCompensation, 0, 0, 0);
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideBack, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)maximizeSprint, 0, 0, 0);
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveRecoilCompensation, 0, 0, 0);
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveStrafeCompensation, 0, 0, 0);
 
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)autoClick, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)flickClick, 0, 0, 0);
+
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)crouchStrafe, 0, 0, 0);
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveBHop, 0, 0, 0);
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)autoSwapWeapon, 0, 0, 0);
 
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0);
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)zoomInput, 0, 0, 0);
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
 
