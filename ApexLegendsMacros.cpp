@@ -55,85 +55,6 @@ void trackZoom() {
 	}
 }
 
-void reticule() {
-	RGBQUAD centerColour;
-	centerColour.rgbRed = 0;
-	centerColour.rgbBlue = 0;
-	centerColour.rgbGreen = 255;
-	
-	const int verticalWidth = 2;
-	const int verticalHeight = 400;
-	HDC dcV = GetDC(HWND_DESKTOP);
-	BITMAPINFOHEADER bmiV = { 0 };
-	bmiV.biSize = sizeof(BITMAPINFOHEADER);
-	bmiV.biPlanes = 1;
-	bmiV.biBitCount = 32;
-	bmiV.biWidth = verticalWidth;
-	bmiV.biHeight = -verticalHeight;
-	bmiV.biCompression = BI_RGB;
-	bmiV.biSizeImage = 0; // 3 * ScreenX * ScreenY
-	RGBQUAD verticalPixels[verticalWidth * verticalHeight];
-	for (int i = 0; i < verticalWidth * verticalHeight; i++) {
-		verticalPixels[i] = centerColour;
-	}
-	
-	const int horizontalWidth = 400;
-	const int horizontalHeight = 1;
-	HDC dcH = GetDC(HWND_DESKTOP);
-	BITMAPINFOHEADER bmiH = { 0 };
-	bmiH.biSize = sizeof(BITMAPINFOHEADER);
-	bmiH.biPlanes = 1;
-	bmiH.biBitCount = 32;
-	bmiH.biWidth = horizontalWidth;
-	bmiH.biHeight = -horizontalHeight;
-	bmiH.biCompression = BI_RGB;
-	bmiH.biSizeImage = 0; // 3 * ScreenX * ScreenY
-	RGBQUAD horizontalPixels[horizontalWidth * horizontalHeight];
-	for (int i = 0; i < horizontalWidth * horizontalHeight; i++) {
-		horizontalPixels[i] = centerColour;
-	}
-
-	const int dotWidth = 2;
-	const int dotHeight = 2;
-	HDC dcD = GetDC(HWND_DESKTOP);
-	BITMAPINFOHEADER bmiD = { 0 };
-	bmiD.biSize = sizeof(BITMAPINFOHEADER);
-	bmiD.biPlanes = 1;
-	bmiD.biBitCount = 32;
-	bmiD.biWidth = dotWidth;
-	bmiD.biHeight = -dotHeight;
-	bmiD.biCompression = BI_RGB;
-	bmiD.biSizeImage = 0; // 3 * ScreenX * ScreenY
-	RGBQUAD dotPixels[dotWidth * dotHeight];
-	for (int i = 0; i < dotWidth * dotHeight; i++) {
-		dotPixels[i] = centerColour;
-	}
-
-	while (true) {
-		if (enabled) {
-			// Large:
-			SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - verticalHeight - 25, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 + 26, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS); 
-			SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth - 25, ySize / 2, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcH, xSize / 2 + 26, ySize / 2, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-
-			// Dot:
-			SetDIBitsToDevice(dcD, xSize / 2 - dotWidth / 2, (ySize / 2 - dotHeight / 2), dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
-
-			// Box:
-			//SetDIBitsToDevice(dcV, xSize / 2 - horizontalWidth / 2, ySize / 2 - verticalHeight / 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
-			//SetDIBitsToDevice(dcV, xSize / 2 + horizontalWidth / 2 - 1, ySize / 2 - verticalHeight / 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
-			//SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth / 2, ySize / 2 - verticalHeight / 2, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-			//SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth / 2, ySize / 2 + verticalHeight / 2 - 1, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-
-			// Cross:
-			//SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - verticalHeight / 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS); 
-			//SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth / 2 - 1, ySize / 2 - 0, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-		}
-		Sleep(3);
-	}
-}
-
 void maximizeSprint() {
 	INPUT C_keyDown;
 	C_keyDown.type = INPUT_KEYBOARD;
@@ -242,6 +163,105 @@ void slideBack() {
 	}
 }
 
+void reticule() {
+	RGBQUAD centerColour;
+	centerColour.rgbRed = 255;
+	centerColour.rgbGreen = 220;
+	centerColour.rgbBlue = 0;
+	RGBQUAD rimColour;
+	rimColour.rgbRed = 255;
+	rimColour.rgbGreen = 60;
+	rimColour.rgbBlue = 0;
+	
+	//const int verticalWidth = 2;
+	//const int verticalHeight = 400;
+	//HDC dcV = GetDC(HWND_DESKTOP);
+	//BITMAPINFOHEADER bmiV = { 0 };
+	//bmiV.biSize = sizeof(BITMAPINFOHEADER);
+	//bmiV.biPlanes = 1;
+	//bmiV.biBitCount = 32;
+	//bmiV.biWidth = verticalWidth;
+	//bmiV.biHeight = -verticalHeight;
+	//bmiV.biCompression = BI_RGB;
+	//bmiV.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	//RGBQUAD verticalPixels[verticalWidth * verticalHeight];
+	//for (int i = 0; i < verticalWidth * verticalHeight; i++) {
+	//	verticalPixels[i] = centerColour;
+	//}
+	//
+	//const int horizontalWidth = 400;
+	//const int horizontalHeight = 1;
+	//HDC dcH = GetDC(HWND_DESKTOP);
+	//BITMAPINFOHEADER bmiH = { 0 };
+	//bmiH.biSize = sizeof(BITMAPINFOHEADER);
+	//bmiH.biPlanes = 1;
+	//bmiH.biBitCount = 32;
+	//bmiH.biWidth = horizontalWidth;
+	//bmiH.biHeight = -horizontalHeight;
+	//bmiH.biCompression = BI_RGB;
+	//bmiH.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	//RGBQUAD horizontalPixels[horizontalWidth * horizontalHeight];
+	//for (int i = 0; i < horizontalWidth * horizontalHeight; i++) {
+	//	horizontalPixels[i] = centerColour;
+	//}
+
+	const int dotWidth = 2;
+	const int dotHeight = 2;
+	HDC dcD = GetDC(HWND_DESKTOP);
+	BITMAPINFOHEADER bmiD = { 0 };
+	bmiD.biSize = sizeof(BITMAPINFOHEADER);
+	bmiD.biPlanes = 1;
+	bmiD.biBitCount = 32;
+	bmiD.biWidth = dotWidth;
+	bmiD.biHeight = -dotHeight;
+	bmiD.biCompression = BI_RGB;
+	bmiD.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	RGBQUAD dotPixels[dotWidth * dotHeight];
+	for (int i = 0; i < dotWidth * dotHeight; i++) {
+		dotPixels[i] = centerColour;
+	}
+	const int rimWidth = 4;
+	const int rimHeight = 4;
+	HDC dcR = GetDC(HWND_DESKTOP);
+	BITMAPINFOHEADER bmiR = { 0 };
+	bmiR.biSize = sizeof(BITMAPINFOHEADER);
+	bmiR.biPlanes = 1;
+	bmiR.biBitCount = 32;
+	bmiR.biWidth = rimWidth;
+	bmiR.biHeight = -dotHeight;
+	bmiR.biCompression = BI_RGB;
+	bmiR.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	RGBQUAD rimPixels[rimWidth * rimHeight];
+	for (int i = 0; i < rimWidth * rimHeight; i++) {
+		rimPixels[i] = rimColour;
+	}
+
+	while (true) {
+		if (enabled) {
+			// Large:
+			//SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - verticalHeight - 25, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 + 26, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS); 
+			//SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth - 25, ySize / 2, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcH, xSize / 2 + 26, ySize / 2, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+
+			// Dot:
+			SetDIBitsToDevice(dcD, xSize / 2 - rimWidth / 2, (ySize / 2 - rimHeight / 2), rimWidth, rimHeight, 0, 0, 0, rimHeight, &rimPixels, (BITMAPINFO*)&bmiR, DIB_RGB_COLORS);
+			SetDIBitsToDevice(dcD, xSize / 2 - dotWidth / 2, (ySize / 2 - dotHeight / 2), dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
+
+			// Box:
+			//SetDIBitsToDevice(dcV, xSize / 2 - horizontalWidth / 2, ySize / 2 - verticalHeight / 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcV, xSize / 2 + horizontalWidth / 2 - 1, ySize / 2 - verticalHeight / 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth / 2, ySize / 2 - verticalHeight / 2, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth / 2, ySize / 2 + verticalHeight / 2 - 1, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+
+			// Cross:
+			//SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - verticalHeight / 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS); 
+			//SetDIBitsToDevice(dcH, xSize / 2 - horizontalWidth / 2 - 1, ySize / 2 - 0, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+		}
+		Sleep(3);
+	}
+}
+
 void fullAutoConversion() { // // // // MOUSEEVENTF_LEFTDOWN
 	INPUT VK_NUMPAD0_keyDown;
 	VK_NUMPAD0_keyDown.type = INPUT_KEYBOARD;
@@ -258,7 +278,7 @@ void fullAutoConversion() { // // // // MOUSEEVENTF_LEFTDOWN
 		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
 			SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
 			for (int i = 22; i > 0; i--) {
-				mouse_event(MOUSEEVENTF_MOVE, 0, (int) i * i / 100, 0, 0);
+				mouse_event(MOUSEEVENTF_MOVE, 0, (int) i / 8, 0, 0);
 				Sleep(10);
 				if ((GetKeyState(VK_LBUTTON) & 0x100) == 0) {
 					release = true;
@@ -283,15 +303,15 @@ void crouchSpamStrafe() {
 	INPUT VK_CONTROL_keyUp = VK_CONTROL_keyDown;
 	VK_CONTROL_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 	while (true) {
-		if ((GetKeyState(0x57) & 0x100) == 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0) {
+		if ((GetKeyState(0x57) & 0x100) == 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && enabled) {
 			if ((GetKeyState(0x44) & 0x100) != 0 && enabled) { // D causes leftward mouse movement
 				mouse_event(MOUSEEVENTF_MOVE, -1, 0, 0, 0);
 			}
-			if ((GetKeyState(0x41) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && enabled) { // A causes rightward mouse movement
+			if ((GetKeyState(0x41) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0) { // A causes rightward mouse movement
 				SendInput(1, &VK_CONTROL_keyDown, sizeof(INPUT));
 				while ((GetKeyState(0x41) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0) {
 					if ((GetKeyState(0x57) & 0x100) != 0) { break; }
-					mouse_event(MOUSEEVENTF_MOVE, 1, -1, 0, 0);
+					mouse_event(MOUSEEVENTF_MOVE, 1, 0, 0, 0);
 					Sleep(20);
 				}
 				SendInput(1, &VK_CONTROL_keyUp, sizeof(INPUT));
@@ -299,6 +319,24 @@ void crouchSpamStrafe() {
 		}
 
 		Sleep(20);
+	}
+}
+void crouchCompensation() {
+	while (true) {
+		if ((GetKeyState(VK_CONTROL) & 0x100) != 0 && enabled) {
+			for (int i = 0; i < 20; i++) {
+				mouse_event(MOUSEEVENTF_MOVE, 0, -2, 0, 0);
+				Sleep(12);
+			}
+			while ((GetKeyState(VK_CONTROL) & 0x100) != 0) {
+				Sleep(10);
+			}
+			for (int i = 0; i < 20; i++) {
+				mouse_event(MOUSEEVENTF_MOVE, 0, 2, 0, 0);
+				Sleep(10);
+			}
+		}
+		Sleep(10);
 	}
 }
 
@@ -338,29 +376,29 @@ void crouchSpamStrafe() {
 //	}
 //}
 
-void pathfinderJump() {
-	INPUT VK_SPACE_keyDown;
-	VK_SPACE_keyDown.type = INPUT_KEYBOARD;
-	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_SPACE_keyDown.ki.time = 0;
-	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
-	VK_SPACE_keyDown.ki.dwExtraInfo = 0;
-	VK_SPACE_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
-	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-	while (true) {
-		if ((GetKeyState(0x46) & 0x100) != 0 && enabled) { // if F key pressed
-			Sleep(450);
-			for (int i = 0; i < 10; i++) {
-				SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-				Sleep(20);
-				SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-				Sleep(10);
-			}
-		}
-		Sleep(10);
-	}
-}
+//void pathfinderJump() {
+//	INPUT VK_SPACE_keyDown;
+//	VK_SPACE_keyDown.type = INPUT_KEYBOARD;
+//	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
+//	VK_SPACE_keyDown.ki.time = 0;
+//	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
+//	VK_SPACE_keyDown.ki.dwExtraInfo = 0;
+//	VK_SPACE_keyDown.ki.dwFlags = 0; // 0 for key down
+//	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
+//	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+//	while (true) {
+//		if ((GetKeyState(0x46) & 0x100) != 0 && enabled) { // if F key pressed
+//			Sleep(450);
+//			for (int i = 0; i < 10; i++) {
+//				SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+//				Sleep(20);
+//				SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+//				Sleep(10);
+//			}
+//		}
+//		Sleep(10);
+//	}
+//}
 
 RGBQUAD* capture(POINT a, POINT b) { /////////////////
 	int width = 2;
@@ -439,6 +477,7 @@ int main() {
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)maximizeSprint, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)fullAutoConversion, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)crouchSpamStrafe, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)crouchCompensation, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0);
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)pathfinderJump, 0, 0, 0);
 	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveBHop, 0, 0, 0);
