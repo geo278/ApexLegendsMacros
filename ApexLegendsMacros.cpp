@@ -11,7 +11,7 @@ bool enabled = true;
 int xSize = GetSystemMetrics(SM_CXSCREEN);
 int ySize = GetSystemMetrics(SM_CYSCREEN);
 
-float zoom = (float)2;
+float zoom = (float)1.2;
 
 BOOL SetZoomB(float magFactor) {
 	if (magFactor < 1.0) {
@@ -55,139 +55,27 @@ void trackZoom() {
 	}
 }
 
-void maximizeSprint() {
-	INPUT C_keyDown;
-	C_keyDown.type = INPUT_KEYBOARD;
-	C_keyDown.ki.wScan = MapVirtualKey(0x43, MAPVK_VK_TO_VSC); // hardware scan code
-	C_keyDown.ki.time = 0;
-	C_keyDown.ki.wVk = 0x43; // virtual-key code
-	C_keyDown.ki.dwExtraInfo = 0;
-	C_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT C_keyUp = C_keyDown;
-	C_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-
-	INPUT VK_SPACE_keyDown = C_keyDown;
-	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
-	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
-	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-
-	while (true) {
-		while (((GetKeyState(0x57) & 0x100) != 0) && ((GetKeyState(VK_SHIFT) & 0x100) != 0) && enabled) {
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-
-			SendInput(1, &C_keyDown, sizeof(INPUT));
-			Sleep(350);
-			SendInput(1, &C_keyUp, sizeof(INPUT));
-			Sleep(50);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(200);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-			Sleep(200);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-			Sleep(50);
-			if ((GetKeyState(0x57) & 0x100) == 0 || (GetKeyState(VK_SHIFT) & 0x100) == 0) { break; }
-		}
-		Sleep(5);
-	}
-}
-
-void slideBack() {
-	INPUT C_keyDown;
-	C_keyDown.type = INPUT_KEYBOARD;
-	C_keyDown.ki.wScan = MapVirtualKey(0x43, MAPVK_VK_TO_VSC); // hardware scan code
-	C_keyDown.ki.time = 0;
-	C_keyDown.ki.wVk = 0x43; // virtual-key code
-	C_keyDown.ki.dwExtraInfo = 0;
-	C_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT C_keyUp = C_keyDown;
-	C_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-
-	INPUT VK_SPACE_keyDown = C_keyDown;
-	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
-	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
-	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-
-	while (true) {
-		while ((GetKeyState(0x53) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && (GetKeyState(0x41) & 0x100) == 0 && (GetKeyState(0x44) & 0x100) == 0 && enabled) {
-			Sleep(100);
-			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
-
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(68);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-			Sleep(68);
-
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(68);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-			Sleep(68);
-
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(68);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-			Sleep(68);
-
-			if ((GetKeyState(0x53) & 0x100) == 0) { break; }
-			SendInput(1, &C_keyDown, sizeof(INPUT));
-			Sleep(200);
-			SendInput(1, &C_keyUp, sizeof(INPUT));
-
-			for (int i = 0; i < 6; i++) {
-				Sleep(200);
-				if ((GetKeyState(0x53) & 0x100) == 0) {
-					SendInput(1, &C_keyUp, sizeof(INPUT));
-					break;
-				}
-			}
-			SendInput(1, &C_keyDown, sizeof(INPUT));
-			Sleep(50);
-			SendInput(1, &C_keyUp, sizeof(INPUT));
-			Sleep(100);
-		}
-		Sleep(5);
-	}
-}
-
 void reticule() {
 	RGBQUAD centerColour;
-	centerColour.rgbRed = 255;
-	centerColour.rgbGreen = 220;
-	centerColour.rgbBlue = 0;
-	RGBQUAD rimColour;
-	rimColour.rgbRed = 255;
-	rimColour.rgbGreen = 60;
-	rimColour.rgbBlue = 0;
+	centerColour.rgbRed = 0;
+	centerColour.rgbGreen = 255;
+	centerColour.rgbBlue = 15;
 	
-	//const int verticalWidth = 2;
-	//const int verticalHeight = 400;
-	//HDC dcV = GetDC(HWND_DESKTOP);
-	//BITMAPINFOHEADER bmiV = { 0 };
-	//bmiV.biSize = sizeof(BITMAPINFOHEADER);
-	//bmiV.biPlanes = 1;
-	//bmiV.biBitCount = 32;
-	//bmiV.biWidth = verticalWidth;
-	//bmiV.biHeight = -verticalHeight;
-	//bmiV.biCompression = BI_RGB;
-	//bmiV.biSizeImage = 0; // 3 * ScreenX * ScreenY
-	//RGBQUAD verticalPixels[verticalWidth * verticalHeight];
-	//for (int i = 0; i < verticalWidth * verticalHeight; i++) {
-	//	verticalPixels[i] = centerColour;
-	//}
+	const int verticalWidth = 2;
+	const int verticalHeight = 100;
+	HDC dcV = GetDC(HWND_DESKTOP);
+	BITMAPINFOHEADER bmiV = { 0 };
+	bmiV.biSize = sizeof(BITMAPINFOHEADER);
+	bmiV.biPlanes = 1;
+	bmiV.biBitCount = 32;
+	bmiV.biWidth = verticalWidth;
+	bmiV.biHeight = -verticalHeight;
+	bmiV.biCompression = BI_RGB;
+	bmiV.biSizeImage = 0; // 3 * ScreenX * ScreenY
+	RGBQUAD verticalPixels[verticalWidth * verticalHeight];
+	for (int i = 0; i < verticalWidth * verticalHeight; i++) {
+		verticalPixels[i] = centerColour;
+	}
 	//
 	//const int horizontalWidth = 400;
 	//const int horizontalHeight = 1;
@@ -220,24 +108,14 @@ void reticule() {
 	for (int i = 0; i < dotWidth * dotHeight; i++) {
 		dotPixels[i] = centerColour;
 	}
-	const int rimWidth = 4;
-	const int rimHeight = 4;
-	HDC dcR = GetDC(HWND_DESKTOP);
-	BITMAPINFOHEADER bmiR = { 0 };
-	bmiR.biSize = sizeof(BITMAPINFOHEADER);
-	bmiR.biPlanes = 1;
-	bmiR.biBitCount = 32;
-	bmiR.biWidth = rimWidth;
-	bmiR.biHeight = -dotHeight;
-	bmiR.biCompression = BI_RGB;
-	bmiR.biSizeImage = 0; // 3 * ScreenX * ScreenY
-	RGBQUAD rimPixels[rimWidth * rimHeight];
-	for (int i = 0; i < rimWidth * rimHeight; i++) {
-		rimPixels[i] = rimColour;
-	}
 
 	while (true) {
 		if (enabled) {
+			// Vertical:
+			SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - verticalHeight, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+
+
+
 			// Large:
 			//SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - verticalHeight - 25, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
 			//SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 + 26, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS); 
@@ -245,8 +123,7 @@ void reticule() {
 			//SetDIBitsToDevice(dcH, xSize / 2 + 26, ySize / 2, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
 
 			// Dot:
-			SetDIBitsToDevice(dcD, xSize / 2 - rimWidth / 2, (ySize / 2 - rimHeight / 2), rimWidth, rimHeight, 0, 0, 0, rimHeight, &rimPixels, (BITMAPINFO*)&bmiR, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcD, xSize / 2 - dotWidth / 2, (ySize / 2 - dotHeight / 2), dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcD, xSize / 2 - dotWidth / 2, (ySize / 2 - dotHeight / 2), dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
 
 			// Box:
 			//SetDIBitsToDevice(dcV, xSize / 2 - horizontalWidth / 2, ySize / 2 - verticalHeight / 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
@@ -262,7 +139,7 @@ void reticule() {
 	}
 }
 
-void fullAutoConversion() { // // // // MOUSEEVENTF_LEFTDOWN
+void recoilCompensation() { // // // // MOUSEEVENTF_LEFTDOWN
 	INPUT VK_NUMPAD0_keyDown;
 	VK_NUMPAD0_keyDown.type = INPUT_KEYBOARD;
 	VK_NUMPAD0_keyDown.ki.wScan = MapVirtualKey(VK_NUMPAD0, MAPVK_VK_TO_VSC); // hardware scan code
@@ -272,55 +149,27 @@ void fullAutoConversion() { // // // // MOUSEEVENTF_LEFTDOWN
 	VK_NUMPAD0_keyDown.ki.dwFlags = 0; // 0 for key down
 	INPUT VK_NUMPAD0_keyUp = VK_NUMPAD0_keyDown;
 	VK_NUMPAD0_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-	bool release = false;
 
 	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
-			SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
-			for (int i = 22; i > 0; i--) {
-				mouse_event(MOUSEEVENTF_MOVE, 0, (int) i / 8, 0, 0);
-				Sleep(10);
+		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0&& enabled) {
+			//SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
+			for (int i = 65; i > 0; i--) {
+				mouse_event(MOUSEEVENTF_MOVE, 0, 2, 0, 0);
+				Sleep(12);
 				if ((GetKeyState(VK_LBUTTON) & 0x100) == 0) {
-					release = true;
 					break;
 				}
 			}
-			SendInput(1, &VK_NUMPAD0_keyUp, sizeof(INPUT));
-			Sleep(10);
+			while ((GetKeyState(VK_LBUTTON) & 0x100) != 0) {
+				mouse_event(MOUSEEVENTF_MOVE, 0, 1, 0, 0);
+				Sleep(12);
+			}
+			//SendInput(1, &VK_NUMPAD0_keyUp, sizeof(INPUT));
 		}
 		Sleep(1);
 	}
 }
 
-void crouchSpamStrafe() {
-	INPUT VK_CONTROL_keyDown;
-	VK_CONTROL_keyDown.type = INPUT_KEYBOARD;
-	VK_CONTROL_keyDown.ki.wScan = MapVirtualKey(VK_CONTROL, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_CONTROL_keyDown.ki.time = 0;
-	VK_CONTROL_keyDown.ki.wVk = VK_CONTROL; // virtual-key code
-	VK_CONTROL_keyDown.ki.dwExtraInfo = 0;
-	VK_CONTROL_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT VK_CONTROL_keyUp = VK_CONTROL_keyDown;
-	VK_CONTROL_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-	while (true) {
-		if ((GetKeyState(0x57) & 0x100) == 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && enabled) {
-			if ((GetKeyState(0x44) & 0x100) != 0 && enabled) { // D causes leftward mouse movement
-				mouse_event(MOUSEEVENTF_MOVE, -1, 0, 0, 0);
-			}
-			if ((GetKeyState(0x41) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0) { // A causes rightward mouse movement
-				SendInput(1, &VK_CONTROL_keyDown, sizeof(INPUT));
-				while ((GetKeyState(0x41) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0) {
-					if ((GetKeyState(0x57) & 0x100) != 0) { break; }
-					mouse_event(MOUSEEVENTF_MOVE, 1, 0, 0, 0);
-					Sleep(20);
-				}
-				SendInput(1, &VK_CONTROL_keyUp, sizeof(INPUT));
-			}
-		}
-
-		Sleep(20);
-	}
-}
 void crouchCompensation() {
 	while (true) {
 		if ((GetKeyState(VK_CONTROL) & 0x100) != 0 && enabled) {
@@ -340,69 +189,109 @@ void crouchCompensation() {
 	}
 }
 
-//void passiveBHop() {
-//	INPUT VK_CONTROL_keyDown;
-//	VK_CONTROL_keyDown.type = INPUT_KEYBOARD;
-//	VK_CONTROL_keyDown.ki.wScan = MapVirtualKey(VK_CONTROL, MAPVK_VK_TO_VSC); // hardware scan code
-//	VK_CONTROL_keyDown.ki.time = 0;
-//	VK_CONTROL_keyDown.ki.wVk = VK_CONTROL; // virtual-key code
-//	VK_CONTROL_keyDown.ki.dwExtraInfo = 0;
-//	VK_CONTROL_keyDown.ki.dwFlags = 0; // 0 for key down
-//	INPUT VK_CONTROL_keyUp = VK_CONTROL_keyDown;
-//	VK_CONTROL_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-//
-//	INPUT VK_SPACE_keyDown = VK_CONTROL_keyDown;
-//	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
-//	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
-//	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
-//	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-//
-//	while (true) {
-//		while ((GetKeyState(VK_CONTROL) & 0x100) != 00) {
-//			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-//			Sleep(196);
-//			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-//			Sleep(196);
-//		}
-//		Sleep(1);
-//	}
-//}
+void extraAimStrafe() {
+	while (true) {
+		if ((GetKeyState(0x41) & 0x100) != 0 && enabled) { // A				
+			mouse_event(MOUSEEVENTF_MOVE, -1, 0, 0, 0);
+		}
+		if ((GetKeyState(0x44) & 0x100) != 0 && enabled) { // D
+			mouse_event(MOUSEEVENTF_MOVE, 1, 0, 0, 0);
+		}
+		Sleep(4);
+	}
+}
 
-//void zoomInput() {
-//	while (1) {
-//		cout << "Enter number to change zoom value ( current value: " << zoom << " )" << endl;
-//		cin >> zoom;
-//		Sleep(500);
-//	}
-//}
+void passiveBHop() {
+	INPUT VK_SPACE_keyDown;
+	VK_SPACE_keyDown.type = INPUT_KEYBOARD;
+	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_SPACE_keyDown.ki.time = 0;
+	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
+	VK_SPACE_keyDown.ki.dwExtraInfo = 0;
+	VK_SPACE_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
+	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
-//void pathfinderJump() {
-//	INPUT VK_SPACE_keyDown;
-//	VK_SPACE_keyDown.type = INPUT_KEYBOARD;
-//	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
-//	VK_SPACE_keyDown.ki.time = 0;
-//	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
-//	VK_SPACE_keyDown.ki.dwExtraInfo = 0;
-//	VK_SPACE_keyDown.ki.dwFlags = 0; // 0 for key down
-//	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
-//	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
-//	while (true) {
-//		if ((GetKeyState(0x46) & 0x100) != 0 && enabled) { // if F key pressed
-//			Sleep(450);
-//			for (int i = 0; i < 10; i++) {
-//				SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-//				Sleep(20);
-//				SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-//				Sleep(10);
-//			}
-//		}
-//		Sleep(10);
-//	}
-//}
+	while (true) {
+		while ((GetKeyState(VK_CONTROL) & 0x100) != 00 && enabled) {
+			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+			Sleep(10);
+			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+			Sleep(10);
+		}
+		Sleep(1);
+	}
+}
+void backwardBHop() {
+	INPUT VK_CONTROL_keyDown;
+	VK_CONTROL_keyDown.type = INPUT_KEYBOARD;
+	VK_CONTROL_keyDown.ki.wScan = MapVirtualKey(VK_CONTROL, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_CONTROL_keyDown.ki.time = 0;
+	VK_CONTROL_keyDown.ki.wVk = VK_CONTROL; // virtual-key code
+	VK_CONTROL_keyDown.ki.dwExtraInfo = 0;
+	VK_CONTROL_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT VK_CONTROL_keyUp = VK_CONTROL_keyDown;
+	VK_CONTROL_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+
+	INPUT VK_SPACE_keyDown = VK_CONTROL_keyDown;
+	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
+	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
+	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+
+	bool release = false;
+
+	while (true) {
+		while ((GetKeyState(0x53) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) == 0 && enabled) {
+			release = false;
+			for (int i = 0; i < 15; i++) {
+				Sleep(10);
+				if ((GetKeyState(0x53) & 0x100) == 0) {
+					release = true;
+					break;
+				}
+			}
+			if (!release) {
+				SendInput(1, &VK_CONTROL_keyDown, sizeof(INPUT));
+				while ((GetKeyState(0x53) & 0x100) != 0) {
+					Sleep(10);
+				}
+				SendInput(1, &VK_CONTROL_keyUp, sizeof(INPUT));
+			}
+		}
+		Sleep(5);
+	}
+}
+
+void pathfinderJump() {
+	INPUT VK_SPACE_keyDown;
+	VK_SPACE_keyDown.type = INPUT_KEYBOARD;
+	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
+	VK_SPACE_keyDown.ki.time = 0;
+	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
+	VK_SPACE_keyDown.ki.dwExtraInfo = 0;
+	VK_SPACE_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
+	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+	while (true) {
+		if ((GetKeyState(0x46) & 0x100) != 0 && enabled) { // if F key pressed
+			Sleep(450);
+			for (int i = 0; i < 10; i++) {
+				SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
+				Sleep(20);
+				SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
+				Sleep(10);
+			}
+		}
+		Sleep(10);
+	}
+}
+
 
 RGBQUAD* capture(POINT a, POINT b) { /////////////////
 	int width = 2;
 	int height = 2;
+	int gridSize = width * height;
 	// copy screen to bitmap
 	HDC     hScreen = GetDC(NULL);
 	HDC     hDC = CreateCompatibleDC(hScreen);
@@ -419,7 +308,7 @@ RGBQUAD* capture(POINT a, POINT b) { /////////////////
 	*/
 
 	// Array conversion:
-	RGBQUAD* pixels = new RGBQUAD[width * height];
+	RGBQUAD* pixels = new RGBQUAD[gridSize];
 
 	BITMAPINFOHEADER bmi = { 0 };
 	bmi.biSize = sizeof(BITMAPINFOHEADER);
@@ -451,40 +340,41 @@ void trackEnabled() {
 	expectDarkB.y = 52;
 
 	while (1) {
-		RGBQUAD expectLight = capture(expectLightA, expectLightB)[0];
-		RGBQUAD expectDark = capture(expectDarkA, expectDarkB)[0];
-		//cout << (int)expectLight.rgbRed << "  " << (int)expectLight.rgbGreen << "  " << (int)expectLight.rgbBlue << "  " << endl;
-		//cout << (int)expectDark.rgbRed << "  " << (int)expectDark.rgbGreen << "  " << (int)expectDark.rgbBlue << "  " << endl;
-		if ((int)expectLight.rgbRed > 240 && (int)expectLight.rgbGreen > 240 && (int)expectLight.rgbBlue > 240 &&
-			(int)expectDark.rgbRed < 60 && (int)expectDark.rgbGreen < 60 && (int)expectDark.rgbBlue < 60) {
-			enabled = true;
-		} else {
-			enabled = false;
-		}
+		//RGBQUAD expectLight = capture(expectLightA, expectLightB)[0];
+		//RGBQUAD expectDark = capture(expectDarkA, expectDarkB)[0];
+		////cout << (int)expectLight.rgbRed << "  " << (int)expectLight.rgbGreen << "  " << (int)expectLight.rgbBlue << "  " << endl;
+		////cout << (int)expectDark.rgbRed << "  " << (int)expectDark.rgbGreen << "  " << (int)expectDark.rgbBlue << "  " << endl;
+		//if (((int)expectLight.rgbRed > 230 && (int)expectLight.rgbGreen > 230 && (int)expectLight.rgbBlue > 230 &&
+		//	(int)expectDark.rgbRed < 200 && (int)expectDark.rgbGreen < 80 && (int)expectDark.rgbBlue < 80) || ((GetKeyState(VK_RBUTTON) & 0x100) != 0)) {
+		//	enabled = true;
+		//} else {
+		//	enabled = false;
+		//}
+		//Sleep(200);
 
 		if ((GetKeyState(VK_F2) & 0x100) != 0) {
-			enabled = true;
+			enabled = !enabled;
 			enabled ? cout << "enabled" << endl : cout << "disabled" << endl;
 			Sleep(500);
 		}
 
-		Sleep(200);
+		Sleep(5);
 	}
 }
 
 int main() {
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideBack, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)maximizeSprint, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)fullAutoConversion, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)crouchSpamStrafe, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)crouchCompensation, 0, 0, 0);
+	SetZoomB(1);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)extraAimStrafe, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)recoilCompensation, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)pathfinderJump, 0, 0, 0);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveBHop, 0, 0, 0);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)zoomInput, 0, 0, 0);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveBHop, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)backwardBHop, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
 
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackEnabled, 0, 0, 0);
+
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)pathfinderJump, 0, 0, 0);
+
 
 	while (1) {
 		Sleep(1000);
