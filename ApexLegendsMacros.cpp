@@ -7,11 +7,12 @@
 using namespace std;
 
 bool enabled = true;
+bool show = true;
 //bool g7ScoutMode = false;
 int xSize = GetSystemMetrics(SM_CXSCREEN);
 int ySize = GetSystemMetrics(SM_CYSCREEN);
 
-float zoom = (float)1.25;
+float zoom = (float)1.33333;
 
 BOOL SetZoomB(float magFactor) {
 	if (magFactor < 1.0) {
@@ -93,8 +94,8 @@ void reticule() {
 		horizontalPixels[i] = centerColour;
 	}
 
-	const int dotWidth = 2;
-	const int dotHeight = 2;
+	const int dotWidth = 4;
+	const int dotHeight = 4;
 	HDC dcD = GetDC(HWND_DESKTOP);
 	BITMAPINFOHEADER bmiD = { 0 };
 	bmiD.biSize = sizeof(BITMAPINFOHEADER);
@@ -110,30 +111,40 @@ void reticule() {
 	}
 
 	while (true) {
-		if (enabled) {
+		if (show && enabled) {
 			// Area:
-			SetDIBitsToDevice(dcV, xSize / 2 - 2 - horizontalWidth, ySize / 2 - 1 - verticalHeight * 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcV, xSize / 2 + horizontalWidth,		ySize / 2 - 1 - verticalHeight * 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcV, xSize / 2 - 2 - horizontalWidth, ySize / 2 + verticalHeight, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcV, xSize / 2 + horizontalWidth,		ySize / 2 + verticalHeight, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcV, xSize / 2 - 2 - horizontalWidth, ySize / 2 - verticalHeight * 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcV, xSize / 2 + horizontalWidth,		ySize / 2 - verticalHeight * 2, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcV, xSize / 2 - 2 - horizontalWidth, ySize / 2 + verticalHeight, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcV, xSize / 2 + horizontalWidth,		ySize / 2 + verticalHeight, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS);
 
-			SetDIBitsToDevice(dcH, xSize / 2 - 1 - horizontalWidth * 2, ySize / 2 - 2 - verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcH, xSize / 2 + horizontalWidth,			ySize / 2 - 2 - verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcH, xSize / 2 - 1 - horizontalWidth * 2, ySize / 2 + verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
-			SetDIBitsToDevice(dcH, xSize / 2 + horizontalWidth,			ySize / 2 + verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcH, xSize / 2 - 1 - horizontalWidth * 2, ySize / 2 - 1 - verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcH, xSize / 2 + horizontalWidth,			ySize / 2 - 1 - verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcH, xSize / 2 - 1 - horizontalWidth * 2, ySize / 2 + verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+			//SetDIBitsToDevice(dcH, xSize / 2 + horizontalWidth,			ySize / 2 + verticalHeight, horizontalWidth, horizontalHeight, 0, 0, 0, horizontalHeight, &horizontalPixels, (BITMAPINFO*)&bmiH, DIB_RGB_COLORS);
+			
 			// Vertical:
 			//SetDIBitsToDevice(dcV, xSize / 2 - 1, ySize / 2 - verticalHeight, verticalWidth, verticalHeight, 0, 0, 0, verticalHeight, &verticalPixels, (BITMAPINFO*)&bmiV, DIB_RGB_COLORS)
 
 			// Dot:
-			//SetDIBitsToDevice(dcD, xSize / 2 - dotWidth / 2, (ySize / 2 - dotHeight / 2), dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
-
+			SetDIBitsToDevice(dcD, xSize / 2 - dotWidth / 2, (ySize / 2 - dotHeight / 2), dotWidth, dotHeight, 0, 0, 0, dotHeight, &dotPixels, (BITMAPINFO*)&bmiD, DIB_RGB_COLORS);
 
 		}
 		Sleep(3);
 	}
 }
-
-void recoilCompensation() { // // // // MOUSEEVENTF_LEFTDOWN
+void controlReticule() {
+	while (true) {
+		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0) {
+			Sleep(55);
+			show = false;
+			Sleep(330);
+			show = true;
+		}
+	}
+}
+ 
+void rapidClick() { // // // // MOUSEEVENTF_LEFTDOWN
 	INPUT VK_NUMPAD0_keyDown;
 	VK_NUMPAD0_keyDown.type = INPUT_KEYBOARD;
 	VK_NUMPAD0_keyDown.ki.wScan = MapVirtualKey(VK_NUMPAD0, MAPVK_VK_TO_VSC); // hardware scan code
@@ -145,20 +156,35 @@ void recoilCompensation() { // // // // MOUSEEVENTF_LEFTDOWN
 	VK_NUMPAD0_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
 	while (true) {
-		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && (GetKeyState(VK_RBUTTON) & 0x100) != 0&& enabled) {
-			//SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
-			for (int i = 65; i > 0; i--) {
-				mouse_event(MOUSEEVENTF_MOVE, 0, 2, 0, 0);
+		while ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
+			SendInput(1, &VK_NUMPAD0_keyDown, sizeof(INPUT));
+			for (int i = 0; i < 30; i++) {\
+				if ((GetKeyState(VK_LBUTTON) & 0x100) == 0) { break; }
+				Sleep(10);
+			}
+			SendInput(1, &VK_NUMPAD0_keyUp, sizeof(INPUT));
+			Sleep(20);
+		}
+		Sleep(1);
+	}
+}
+void recoilCompensation() { // // // // MOUSEEVENTF_LEFTDOWN
+	while (true) {
+		if ((GetKeyState(VK_LBUTTON) & 0x100) != 0 && enabled) {
+			//for (int i = 75; i > 0; i--) {
+			//	mouse_event(MOUSEEVENTF_MOVE, 0, 2, 0, 0);
+			//	Sleep(36);
+			//	if ((GetKeyState(VK_LBUTTON) & 0x100) == 0) {
+			//		break;
+			//	}
+			//}
+			while ((GetKeyState(VK_LBUTTON) & 0x100) != 0) {
+				mouse_event(MOUSEEVENTF_MOVE, 0, 1, 0, 0);
 				Sleep(14);
 				if ((GetKeyState(VK_LBUTTON) & 0x100) == 0) {
 					break;
 				}
 			}
-			while ((GetKeyState(VK_LBUTTON) & 0x100) != 0) {
-				mouse_event(MOUSEEVENTF_MOVE, 0, 1, 0, 0);
-				Sleep(14);
-			}
-			//SendInput(1, &VK_NUMPAD0_keyUp, sizeof(INPUT));
 		}
 		Sleep(1);
 	}
@@ -195,23 +221,28 @@ void extraAimStrafe() {
 	}
 }
 
-void passiveBHop() {
-	INPUT VK_SPACE_keyDown;
-	VK_SPACE_keyDown.type = INPUT_KEYBOARD;
-	VK_SPACE_keyDown.ki.wScan = MapVirtualKey(VK_SPACE, MAPVK_VK_TO_VSC); // hardware scan code
-	VK_SPACE_keyDown.ki.time = 0;
-	VK_SPACE_keyDown.ki.wVk = VK_SPACE; // virtual-key code
-	VK_SPACE_keyDown.ki.dwExtraInfo = 0;
-	VK_SPACE_keyDown.ki.dwFlags = 0; // 0 for key down
-	INPUT VK_SPACE_keyUp = VK_SPACE_keyDown;
-	VK_SPACE_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
+void slideBack() {
+	INPUT C_keyDown;
+	C_keyDown.type = INPUT_KEYBOARD;
+	C_keyDown.ki.wScan = MapVirtualKey(0x43, MAPVK_VK_TO_VSC); // hardware scan code
+	C_keyDown.ki.time = 0;
+	C_keyDown.ki.wVk = 0x43; // virtual-key code
+	C_keyDown.ki.dwExtraInfo = 0;
+	C_keyDown.ki.dwFlags = 0; // 0 for key down
+	INPUT C_keyUp = C_keyDown;
+	C_keyUp.ki.dwFlags = KEYEVENTF_KEYUP;
 
 	while (true) {
-		while ((GetKeyState(VK_CONTROL) & 0x100) != 0 && (GetKeyState(0x53) & 0x100) != 0 && enabled) {
-			SendInput(1, &VK_SPACE_keyDown, sizeof(INPUT));
-			Sleep(10);
-			SendInput(1, &VK_SPACE_keyUp, sizeof(INPUT));
-			Sleep(10);
+		if ((GetKeyState(VK_SPACE) & 0x100) != 0 && (GetKeyState(0x53) & 0x100) != 0 && enabled) {
+			Sleep(150);
+			SendInput(1, &C_keyDown, sizeof(INPUT));
+			Sleep(30);
+			SendInput(1, &C_keyUp, sizeof(INPUT));
+			Sleep(1200);
+			SendInput(1, &C_keyDown, sizeof(INPUT));
+			Sleep(30);
+			SendInput(1, &C_keyUp, sizeof(INPUT));
+			Sleep(200);
 		}
 		Sleep(1);
 	}
@@ -358,12 +389,13 @@ void trackEnabled() {
 
 int main() {
 	SetZoomB(1);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)extraAimStrafe, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)recoilCompensation, 0, 0, 0);
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)recoilCompensation, 0, 0, 0);
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)rapidClick, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)controlReticule, 0, 0, 0);
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)reticule, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)passiveBHop, 0, 0, 0);
-	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)backwardBHop, 0, 0, 0);
-	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)slideBack, 0, 0, 0);
+	//CreateThread(0, 0, (LPTHREAD_START_ROUTINE)backwardBHop, 0, 0, 0);
+	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackZoom, 0, 0, 0);
 
 	CreateThread(0, 0, (LPTHREAD_START_ROUTINE)trackEnabled, 0, 0, 0);
 
